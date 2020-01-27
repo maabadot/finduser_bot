@@ -1,57 +1,29 @@
 const Telegraf = require('telegraf');
 const config = require('./config.json');
-const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+const request = require('request');
 
 const bot = new Telegraf(config.token);
 
-
 function checkVK(nickname) {
-    let xhr = new XMLHttpRequest();
-    let url = `https://vk.com/${nickname}`;
-    xhr.open('GET', url, false);
-    xhr.send();
-    if (xhr.status != 404) {
-        return `VK: vk.com/${nickname}`;
-    } else {
-        return false;
-    }
+    let status, res;
+    request(`https://vk.com/${nickname}`, function (error, response, body) {
+        status = response && response.statusCode;
+        console.log(status);
+        if (status == 200) { res = `vk.com/${nickname}`;}
+        else {res = 'Not found.';}
+    });
+    console.log(res);
+    return res;
 }
 
-function checkINST(nickname) {
-    let xhr = new XMLHttpRequest();
-    let url = `https://www.instagram.com/${nickname}`;
-    xhr.open('GET', url, false);
-    xhr.send();
-    console.log(xhr.status);
-    if (xhr.status != 404) {
-        return `INST: instagram.com/${nickname}`;
-    } else {
-        return false;
-    }
-}
-
-function checkALL(nickname) {
-    let answer = '';
-    let VK = checkVK(nickname);
-    let INST = checkINST(nickname);
-    if (VK) {
-        answer = VK + '\n';
-    }
-    if (INST) {
-        answer = answer + INST;
-    }
-    if (!VK && !INST) {
-        answer= 'Not found.';
-    }
-    return answer;
-}
 
 bot.start((ctx) => ctx.reply('Welcome'));
 bot.help((ctx) => ctx.reply('Help phrase'));
 bot.on('message', function(ctx) {
-    ctx.reply(checkALL(ctx.message.text));
+    let res = checkVK(ctx.message.text);
+    ctx.reply( res );
 });
 
 
 bot.launch();
-console.log('Bot started...');
+console.log('Bot is working...');
