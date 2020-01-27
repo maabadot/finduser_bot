@@ -1,0 +1,21 @@
+{
+  "name": "finduser_bot",
+  "version": "1.0.0",
+  "description": "Find user's social networks.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "telegram",
+    "bot"
+  ],
+  "author": "Sergey Bolshakov",
+  "license": "MIT",
+  "dependencies": {
+    "request": "^2.88.0",
+    "telegraf": "^3.36.0",
+    "then-request": "^6.0.2",
+    "xmlhttprequest": "^1.8.0"
+  }
+}
