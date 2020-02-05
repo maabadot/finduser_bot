@@ -2,28 +2,56 @@ const Telegraf = require('telegraf');
 const config = require('./config.json');
 const request = require('request');
 
-const bot = new Telegraf(config.token);
-
-function checkVK(nickname) {
-    let status, res;
-    request(`https://vk.com/${nickname}`, function (error, response, body) {
-        status = response && response.statusCode;
-        console.log(status);
-        if (status == 200) { res = `vk.com/${nickname}`;}
-        else {res = 'Not found.';}
+function checkVK(nickname, socNet) {
+    request.get(`http://vk.com/${nickname}`).on('response', function(response) {
+        if (response && response.statusCode === 200) {
+            socNet.VK = `http://vk.com/${nickname}`; // 200
+        }
+        console.log('VK checked... ' + nickname)
     });
-    console.log(res);
-    return res;
 }
 
+function checkIG(nickname, socNet) {
+    request.get(`http://instagram.com/${nickname}`).on('response', function(response) {
+        if (response && response.statusCode === 200) {
+            socNet.IG = `http://instagram.com/${nickname}`; // 200
+        }
+        console.log('IG checked... ' + nickname)
+    });
+}
 
+function checkTW(nickname, socNet) {
+    request.get(`http://twitter.com/${nickname}`).on('response', function(response) {
+        if (response && response.statusCode === 200) {
+            socNet.TW = `http://twitter.com/${nickname}`; // 200
+        }
+        console.log('TW checked... ' + nickname)
+    });
+}
+
+function checkAll(nickname, socNet) {
+    checkVK(nickname, socNet);
+    checkIG(nickname, socNet);
+    checkTW(nickname, socNet);
+}
+
+const bot = new Telegraf(config.token);
 bot.start((ctx) => ctx.reply('Welcome'));
 bot.help((ctx) => ctx.reply('Help phrase'));
 bot.on('message', function(ctx) {
-    let res = checkVK(ctx.message.text);
-    ctx.reply( res );
+    let socialNetworks = {
+        VK: 'Not found',
+        IG: 'Not found',
+        TW: 'Not found'
+    };
+    checkAll(ctx.message.text, socialNetworks);
+    ctx.reply(`${socialNetworks.VK}\n${socialNetworks.IG}\n${socialNetworks.TW}`);
+    // setTimeout(() => {
+    //     ctx.reply(`${socialNetworks.VK}\n${socialNetworks.IG}\n${socialNetworks.TW}`);
+    // },3000);
 });
 
 
-bot.launch();
-console.log('Bot is working...');
+bot.launch(function () {
+    console.log('Bot is working...');
+});
