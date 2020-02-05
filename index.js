@@ -65,13 +65,6 @@ bot.on('message', function(ctx) {
         TW: 'Not found'
     };
     checkAll(ctx.message.text, socialNetworks, ctx);
-
-
-    //answer(ctx, socialNetworks);
-
-    // setTimeout(() => {
-    //     answer(ctx, socialNetworks);
-    // },3000);
 });
 
 
