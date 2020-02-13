@@ -80,7 +80,7 @@ bot.on('message', function(ctx) {
         TW: 'TW: Not found',
         links: []
     };
-    let regex = /^[a-zA-Z0-9_\-:?%!@"#&№$;\^*()]+$/;
+    let regex = /^[a-zA-Z0-9_\-:?%!.,/\\@"#&№$;\^*()]+$/;
     if (regex.test(ctx.message.text)) {
         checkAll(ctx.message.text, socialNetworks, ctx);
     }
